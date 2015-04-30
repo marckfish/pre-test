@@ -14,12 +14,9 @@
  */
 package com.priceminister.account.implementation;
 
-import org.springframework.stereotype.Service;
-
 import com.priceminister.account.*;
 
 
-@Service
 public class CustomerAccountRule implements AccountRule {
 
     /* (non-Javadoc)
