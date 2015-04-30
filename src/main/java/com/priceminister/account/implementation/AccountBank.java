@@ -25,10 +25,10 @@ public class AccountBank implements Serializable{
 	@Column
 	private Long id;
 	@Column
-	private double balance = 0;
+	private double balance;
 	@ManyToOne
 	private Customer customer;
-	
+	private int counter = 0;
 	public AccountBank() {
 	}
 	public Long getId() {
@@ -49,5 +49,12 @@ public class AccountBank implements Serializable{
 	public void setCustomer(Customer customer) {
 		this.customer = customer;
 	}
+	public int getCounter() {
+		return counter;
+	}
+	public void setCounter(int counter) {
+		this.counter = counter;
+	}
+	
 	
 }

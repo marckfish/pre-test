@@ -7,23 +7,23 @@ import org.springframework.stereotype.Service;
 import com.priceminister.account.*;
 
 @Service
-public class CustomerAccount extends Thread implements Account{
-	@SuppressWarnings("unused")
+public class CustomerAccount implements Account, Runnable{
 	private Logger LOG = LoggerFactory.getLogger(CustomerAccount.class);
 	private AccountBank accountBank;
-	private Double amount;
 	private AccountRule accountRule;
 	public synchronized void add(Double addedAmount, AccountBank accountBank) {
 		if (addedAmount > 0 && accountBank != null){
+			accountBank.setCounter(accountBank.getCounter() + 1);
 			accountBank.setBalance(accountBank.getBalance()+addedAmount);
 		}
 	}
 
 	public synchronized Double withdrawAndReportBalance(Double withdrawnAmount,
 			AccountRule rule, AccountBank accountBank)
-			throws IllegalBalanceException {
+					throws IllegalBalanceException {
 		if (accountBank != null && withdrawnAmount > 0 && accountBank.getBalance() >= withdrawnAmount){
 			if (rule.withdrawPermitted(accountBank.getBalance() - withdrawnAmount)){
+				accountBank.setCounter(accountBank.getCounter() + 1);
 				return accountBank.getBalance() - withdrawnAmount;
 			}
 		}
@@ -35,11 +35,10 @@ public class CustomerAccount extends Thread implements Account{
 	}
 
 	public void run() {
-		//générer un montant de façon aléatoire
+		//Generate a money amount randomly
 		Double amount = new Double(0);
-		//de manière alétoire on choisit si l'on ajoute de l'argent ou l'on retire 
+		//Randomly, we choose, if we withdraw or we add money to the accountBank. 
 		int addOrWithdraw = 0;
-		int index = 0;
 		do{
 			amount = (double) Math.round(Math.random()*1000);
 			addOrWithdraw = (int) (Math.random()*2);
@@ -52,12 +51,12 @@ public class CustomerAccount extends Thread implements Account{
 					add(amount, accountBank);
 				}
 			}
-			index++;
-			if (index == 10 && getBalance(accountBank) > 0){
+			if ( accountBank.getCounter() == 25 && accountBank.getBalance() > 0){
 				try {
 					accountBank.setBalance(withdrawAndReportBalance(getBalance(accountBank), accountRule, accountBank));
+					accountBank.setCounter(0);
 				} catch (IllegalBalanceException e) {
-					LOG.error("Error while withdrawing, the balance must be greaten than 0" + e.toString());
+					LOG.error("Error while withdrawal money, the balance must be greater than 0" + e.toString());
 				}
 			}
 		}while(getBalance(accountBank) > 0);
@@ -71,14 +70,6 @@ public class CustomerAccount extends Thread implements Account{
 		this.accountBank = accountBank;
 	}
 
-	public Double getAmount() {
-		return amount;
-	}
-
-	public void setAmount(Double amount) {
-		this.amount = amount;
-	}
-
 	public AccountRule getAccountRule() {
 		return accountRule;
 	}
@@ -86,7 +77,5 @@ public class CustomerAccount extends Thread implements Account{
 	public void setAccountRule(AccountRule accountRule) {
 		this.accountRule = accountRule;
 	}
-	
-	
 
 }

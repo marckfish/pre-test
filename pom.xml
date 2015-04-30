@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.priceminister</groupId>
 	<artifactId>pretest-tdd</artifactId>
@@ -13,10 +14,11 @@
 		<hibernate.version>4.2.8.Final</hibernate.version>
 		<hibernate-validator.version>5.0.3.Final</hibernate-validator.version>
 		<javax.el.version>2.2.5</javax.el.version>
-		
+
 		<junit.version>4.11</junit.version>
 		<mockito-all.version>1.9.5</mockito-all.version>
 		<fest-assert.version>1.4</fest-assert.version>
+		<oracle.version>11.2.0</oracle.version>
 	</properties>
 	<dependencies>
 		<dependency>
@@ -26,22 +28,22 @@
 			<scope>test</scope>
 		</dependency>
 		<dependency>
-				<groupId>org.easytesting</groupId>
-				<artifactId>fest-assert</artifactId>
-				<version>${fest-assert.version}</version>
-			</dependency>
+			<groupId>org.easytesting</groupId>
+			<artifactId>fest-assert</artifactId>
+			<version>${fest-assert.version}</version>
+		</dependency>
 
-			<dependency>
-				<groupId>org.mockito</groupId>
-				<artifactId>mockito-core</artifactId>
-				<version>${mockito-all.version}</version>
-				<exclusions>
-					<exclusion>
-						<artifactId>hamcrest-core</artifactId>
-						<groupId>org.hamcrest</groupId>
-					</exclusion>
-				</exclusions>
-			</dependency>
+		<dependency>
+			<groupId>org.mockito</groupId>
+			<artifactId>mockito-core</artifactId>
+			<version>${mockito-all.version}</version>
+			<exclusions>
+				<exclusion>
+					<artifactId>hamcrest-core</artifactId>
+					<groupId>org.hamcrest</groupId>
+				</exclusion>
+			</exclusions>
+		</dependency>
 		<!-- Spring dependencies -->
 
 		<dependency>
@@ -152,18 +154,19 @@
 			<artifactId>javax.el</artifactId>
 			<version>${javax.el.version}</version>
 		</dependency>
-		</dependencies>
-		 <build>
-    <plugins>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-war-plugin</artifactId>
-        <configuration>
-          <failOnMissingWebXml>false</failOnMissingWebXml>
-        </configuration>
-      </plugin>
-    </plugins>
-  </build>
+		
+	</dependencies>
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-war-plugin</artifactId>
+				<configuration>
+					<failOnMissingWebXml>false</failOnMissingWebXml>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
 	<description>
   	Please start by implementing the unit tests and the underlying application code:
 	/pretest-tdd/src/test/java/com/priceminister/account/CustomerAccountTest.java
