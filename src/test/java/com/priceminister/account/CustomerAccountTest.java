@@ -1,9 +1,13 @@
 package com.priceminister.account;
 
 
-import static org.junit.Assert.*;
+import static org.fest.assertions.Assertions.*;
 
 import org.junit.*;
+import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.runners.MockitoJUnitRunner;
 
 import com.priceminister.account.implementation.*;
 
@@ -18,17 +22,21 @@ import com.priceminister.account.implementation.*;
  * When you are done, please zip the whole project (incl. source-code) and send it to recrutement-dev@priceminister.com
  * 
  */
+@RunWith(MockitoJUnitRunner.class)
 public class CustomerAccountTest {
     
-    Account customerAccount;
-    AccountRule rule;
-
+	@InjectMocks
+    private CustomerAccount customerAccount;
+	@InjectMocks
+	CustomerAccountRule rule;
+    @Mock
+    private AccountBank accountBank;
     /**
      * @throws java.lang.Exception
      */
     @Before
     public void setUp() throws Exception {
-        customerAccount = new CustomerAccount();
+    	accountBank = new AccountBank();
     }
     
     /**
@@ -36,7 +44,9 @@ public class CustomerAccountTest {
      */
     @Test
     public void testAccountWithoutMoneyHasZeroBalance() {
-        fail("not yet implemented");
+    	accountBank = new AccountBank();
+    	assertThat(accountBank.getBalance()).isEqualTo(0);
+    	assertThat(accountBank.getBalance()).isNotEqualTo(null);
     }
     
     /**
@@ -44,18 +54,41 @@ public class CustomerAccountTest {
      */
     @Test
     public void testAddPositiveAmount() {
-        fail("not yet implemented");
+    	accountBank.setBalance(1200);
+    	customerAccount.add(new Double(2000), accountBank);
+    	//Balance expected is 3200
+    	assertThat(customerAccount.getBalance(accountBank)).isEqualTo(3200);
     }
     
     /**
      * Tests that an illegal withdrawal throws the expected exception.
      * Use the logic contained in CustomerAccountRule; feel free to refactor the existing code.
+     * @throws IllegalBalanceException 
      */
-    @Test
-    public void testWithdrawAndReportBalanceIllegalBalance() {
-        fail("not yet implemented");
+    @Test(expected = IllegalBalanceException.class)
+    public void testWithdrawAndReportBalanceIllegalBalance_Ko() throws IllegalBalanceException {
+    	accountBank.setBalance(1200);
+    	Double result = customerAccount.withdrawAndReportBalance(new Double(2000), rule, accountBank);
+    	//Balance expected is -800
+    	assertThat(result).isEqualTo(-800);
     }
     
+    @Test
+    public void testWithdrawAndReportBalance() throws IllegalBalanceException{
+    	accountBank.setBalance(1200);
+    	accountBank.setBalance(customerAccount.withdrawAndReportBalance(new Double(800), rule, accountBank));
+    	//Balance expected is 400
+    	assertThat(customerAccount.getBalance(accountBank)).isEqualTo(400);
+    }
+    
+    @Test
+    public void testBalance(){
+    	customerAccount.setAccountBank(accountBank);
+    	customerAccount.setAccountRule(rule);
+    	customerAccount.start();
+    	customerAccount.run();
+    	accountBank.getBalance();
+    }
     // Also implement missing unit tests for the above functionalities.
 
 }
